@@ -1,34 +1,39 @@
-name: Go
+name: Tasks Kata
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-
-  build:
-    name: Build
+  container-job:
     runs-on: ubuntu-latest
+
+    container:
+      image: gobuffalo/buffalo:v0.16.5
+
+    services:
+      postgres:
+        image: postgres:10.8
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+        - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
 
-    - name: Set up Go 1.13
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.13
-      id: go
+      - name: Get dependencies
+        run: go get -v -t -d ./...
+        env: 
+          GOPROXY: https://proxy.golang.org
+          GO111MODULE: on
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v2
-
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
-
-    - name: Build
-      run: go build -v .
+      - name: Test
+        run: buffalo test ./... -v
+        env:
+          POSTGRES_HOST: postgres
