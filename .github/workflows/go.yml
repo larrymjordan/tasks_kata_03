@@ -37,3 +37,4 @@ jobs:
         run: buffalo test ./... -v
         env:
           POSTGRES_HOST: postgres
+          GO111MODULE: on
