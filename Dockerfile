@@ -15,10 +15,10 @@ COPY go.sum go.sum
 # and so that source changes don't invalidate our downloaded layer
 RUN go mod download
 
-ADD . .
+COPY . .
 RUN buffalo build --static -o /bin/app
 
-FROM alpine
+FROM alpine:3.14
 RUN apk add --no-cache bash
 RUN apk add --no-cache ca-certificates
 
