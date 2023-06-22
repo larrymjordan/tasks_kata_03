@@ -18,6 +18,7 @@ A task represents an activity or an actionable item for a group of things that n
 
 
 ### NON FUNCTIONAL REQUIREMENTS
+
 API should only speak JSON language.
 Follow TDD approach to solve the problem.
 Enjoy and have fun.
