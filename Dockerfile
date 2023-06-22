@@ -5,7 +5,7 @@ FROM gobuffalo/buffalo:v0.16.5 as builder
 ENV GO111MODULE on
 ENV GOPROXY http://proxy.golang.org
 
-RUN mkdir -p $GOPATH/src/src
+RUN "mkdir -p $GOPATH/src/src"
 WORKDIR $GOPATH/src/src
 
 # Copy the Go Modules manifests
